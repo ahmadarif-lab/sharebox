@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ShareBox</string>
+    <string name="tab_server">Server</string>
 
     <!-- Home -->
     <string name="server_on">Server is on</string>
@@ -8,7 +9,7 @@
     <string name="btn_start">Start server</string>
     <string name="btn_stop">Stop server</string>
     <string name="open_in_browser">Open in a PC / phone browser:</string>
-    <string name="scan_qr">Scan the QR or type the address above</string>
+    <string name="scan_qr">Open this address in the browser of another device.</string>
     <string name="copy">Copy</string>
     <string name="no_url">No network yet. Connect to Wi-Fi or turn on hotspot.</string>
     <string name="peers_title">Nearby devices</string>

@@ -1,5 +1,6 @@
 package com.ahmadarif.sharebox.ui
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.ahmadarif.sharebox.MainActivity
 import com.ahmadarif.sharebox.R
@@ -30,6 +32,8 @@ class FilesTab(activity: MainActivity) : BaseTab(activity) {
     private val tvPath: TextView = root.findViewById(R.id.tv_path)
     private val btnRefresh: View = root.findViewById(R.id.btn_refresh_files)
     private val listView: ListView = root.findViewById(R.id.list)
+    private val emptyState: LinearLayout = root.findViewById(R.id.empty_state)
+    private val loadingSpinner: ProgressBar = root.findViewById(R.id.loading_spinner)
     private val tvEmpty: TextView = root.findViewById(R.id.tv_empty)
     private val selbar: LinearLayout = root.findViewById(R.id.selbar)
     private val tvSelCount: TextView = root.findViewById(R.id.tv_sel_count)
@@ -70,6 +74,9 @@ class FilesTab(activity: MainActivity) : BaseTab(activity) {
     init {
         listView.adapter = adapter
         buildChips()
+        tvEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_folder, 0, 0)
+        tvEmpty.compoundDrawablePadding = Ui.dp(act, 10f)
+        tvEmpty.setCompoundDrawableTintList(ColorStateList.valueOf(act.getColor(R.color.muted)))
         btnUp.setOnClickListener { goUp() }
         btnRefresh.setOnClickListener { refresh() }
         listView.setOnItemClickListener { _, _, position, _ ->
@@ -160,8 +167,7 @@ class FilesTab(activity: MainActivity) : BaseTab(activity) {
 
     private fun load(block: () -> List<FileRepo.Entry>) {
         loading = true
-        tvEmpty.visibility = View.VISIBLE
-        tvEmpty.setText(R.string.loading)
+        showLoading()
         executor.execute {
             val result = runCatching { block() }.getOrDefault(emptyList())
             act.runOnUiThread {
@@ -173,6 +179,19 @@ class FilesTab(activity: MainActivity) : BaseTab(activity) {
                 updateSelbar()
             }
         }
+    }
+
+    /**
+     * Sedang memuat: kosongkan list dulu supaya nama file dari folder sebelumnya tidak
+     * bertumpuk dengan teks "Loading…", lalu tampilkan spinner.
+     */
+    private fun showLoading() {
+        entries = emptyList()
+        adapter.notifyDataSetChanged()
+        emptyState.visibility = View.VISIBLE
+        loadingSpinner.visibility = View.VISIBLE
+        tvEmpty.setText(R.string.loading)
+        tvEmpty.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
     }
 
     fun refresh() {
@@ -191,14 +210,13 @@ class FilesTab(activity: MainActivity) : BaseTab(activity) {
     }
 
     private fun updateEmpty() {
-        tvEmpty.visibility = if (entries.isEmpty()) View.VISIBLE else View.GONE
+        loadingSpinner.visibility = View.GONE
+        emptyState.visibility = if (entries.isEmpty()) View.VISIBLE else View.GONE
         tvEmpty.setText(
-            when {
-                loading -> R.string.loading
-                activeCat != null && !Storage.hasAllFiles(act) -> R.string.empty_perm
-                else -> R.string.empty_folder
-            }
+            if (activeCat != null && !Storage.hasAllFiles(act)) R.string.empty_perm
+            else R.string.empty_folder
         )
+        tvEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_folder, 0, 0)
     }
 
     private fun updateSelbar() {

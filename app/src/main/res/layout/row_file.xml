@@ -5,10 +5,17 @@
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="16dp"
+    android:paddingStart="6dp"
     android:paddingTop="8dp"
-    android:paddingEnd="8dp"
+    android:paddingEnd="16dp"
     android:paddingBottom="8dp">
+
+    <CheckBox
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false" />
 
     <ImageView
         android:id="@+id/img_icon"
@@ -45,11 +52,4 @@
             android:textColor="@color/muted"
             android:textSize="12sp" />
     </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="false"
-        android:focusable="false" />
 </LinearLayout>

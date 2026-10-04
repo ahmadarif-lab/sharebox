@@ -1,5 +1,6 @@
 package com.ahmadarif.sharebox.ui
 
+import android.content.res.ColorStateList
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -38,6 +39,10 @@ class TransfersTab(activity: MainActivity) : BaseTab(activity) {
 
     init {
         listView.adapter = adapter
+        // Empty state ikut bahasa web UI: ikon + teks, bukan teks polos.
+        tvEmpty.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_transfer, 0, 0)
+        tvEmpty.compoundDrawablePadding = Ui.dp(act, 10f)
+        tvEmpty.setCompoundDrawableTintList(ColorStateList.valueOf(act.getColor(R.color.muted)))
         listView.setOnItemClickListener { _, _, position, _ ->
             val item = adapter.itemAt(position) ?: return@setOnItemClickListener
             if (item.state == TransferState.DONE) openFolder(item.folder)
@@ -121,14 +126,17 @@ class TransfersTab(activity: MainActivity) : BaseTab(activity) {
                 item.state == TransferState.DONE -> {
                     progress.isIndeterminate = false
                     progress.progress = 1000
+                    progress.progressTintList = ColorStateList.valueOf(act.getColor(R.color.ok))
                 }
                 item.state == TransferState.FAILED -> {
                     progress.isIndeterminate = false
                     progress.progress = (item.fraction * 1000).toInt()
+                    progress.progressTintList = ColorStateList.valueOf(act.getColor(R.color.danger))
                 }
                 item.total > 0 -> {
                     progress.isIndeterminate = false
                     progress.progress = (item.fraction * 1000).toInt()
+                    progress.progressTintList = ColorStateList.valueOf(act.getColor(R.color.accent))
                 }
                 else -> {
                     progress.isIndeterminate = true

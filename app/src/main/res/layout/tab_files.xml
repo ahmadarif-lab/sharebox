@@ -114,17 +114,33 @@
             android:paddingBottom="72dp"
             android:scrollbars="none" />
 
-        <TextView
-            android:id="@+id/tv_empty"
+        <LinearLayout
+            android:id="@+id/empty_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:orientation="vertical"
             android:padding="24dp"
-            android:text="@string/empty_folder"
-            android:textColor="@color/muted"
-            android:textSize="14sp"
-            android:visibility="gone" />
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/loading_spinner"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="12dp"
+                android:indeterminateTint="@color/accent"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tv_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/empty_folder"
+                android:textColor="@color/muted"
+                android:textSize="14sp" />
+        </LinearLayout>
     </FrameLayout>
 
     <LinearLayout

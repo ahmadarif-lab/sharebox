@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg">#0E1117</color>
-    <color name="card">#171C26</color>
-    <color name="fg">#E7EAF0</color>
-    <color name="muted">#9AA4B5</color>
-    <color name="border">#262D3B</color>
-    <color name="accent">#6E93FF</color>
-    <color name="accent_2">#9B83FF</color>
-    <color name="accent_soft">#20293F</color>
+    <!-- Cermin tema gelap web UI: accent terang dengan tinta gelap di atasnya. -->
+    <color name="bg">#0D1017</color>
+    <color name="card">#151A24</color>
+    <color name="fg">#E8ECF5</color>
+    <color name="muted">#9AA6BD</color>
+    <color name="border">#242C3D</color>
+    <color name="accent">#8FB0FF</color>
+    <color name="accent_2">#A892FF</color>
+    <color name="accent_soft">#1E2740</color>
     <color name="on_accent">#0B0F18</color>
-    <color name="danger">#FF6B70</color>
-    <color name="danger_soft">#33191B</color>
+    <color name="danger">#FF7B80</color>
+    <color name="danger_soft">#2B1719</color>
     <color name="ok">#4ADE9C</color>
-    <color name="chip">#1E2534</color>
+    <color name="chip">#1A2130</color>
     <color name="nav_bg">#121721</color>
     <color name="hero_fg">#FFFFFF</color>
-    <color name="hero_fg_dim">#C9D6FF</color>
+    <color name="hero_fg_dim">#E6EDFF</color>
 </resources>
