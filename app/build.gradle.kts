@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.ahmadarif.sharebox"
+    namespace = "id.my.bontot.sharebox"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.ahmadarif.sharebox"
+        applicationId = "id.my.bontot.sharebox"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

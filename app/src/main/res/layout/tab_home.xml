@@ -424,7 +424,7 @@
                         android:layout_width="84dp"
                         android:layout_height="84dp">
 
-                        <com.ahmadarif.sharebox.ui.RadarView
+                        <id.my.bontot.sharebox.ui.RadarView
                             android:id="@+id/radar_recv"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
@@ -580,7 +580,7 @@
                     android:layout_width="84dp"
                     android:layout_height="84dp">
 
-                    <com.ahmadarif.sharebox.ui.RadarView
+                    <id.my.bontot.sharebox.ui.RadarView
                         android:id="@+id/radar_send"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -773,7 +773,7 @@
                         android:layout_width="84dp"
                         android:layout_height="84dp">
 
-                        <com.ahmadarif.sharebox.ui.RadarView
+                        <id.my.bontot.sharebox.ui.RadarView
                             android:id="@+id/radar_web"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
