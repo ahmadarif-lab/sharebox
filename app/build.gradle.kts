@@ -1,3 +1,4 @@
+import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -13,18 +14,27 @@ android {
         applicationId = "com.ahmadarif.sharebox"
         minSdk = 26
         targetSdk = 36
-        versionCode = 48
-        versionName = "1.4.9"
+        versionCode = 1
+        versionName = "0.1.0"
     }
 
+    // Kunci rilis TIDAK ada di repo: dibaca dari key.properties (di-ignore git) yang menunjuk ke
+    // keystore di luar proyek. Tanpa file itu (mis. kontributor), rilis ditandatangani kunci debug
+    // supaya build tetap jalan — APK-nya cukup untuk dicoba tapi bukan APK rilis resmi.
+    val keyProps = Properties().apply {
+        val f = rootProject.file("key.properties")
+        if (f.exists()) f.inputStream().use { load(it) }
+    }
+    val hasReleaseKey = keyProps.getProperty("storeFile")?.let { file(it).exists() } == true
+
     signingConfigs {
-        create("release") {
-            storeFile = rootProject.file(
-                (project.findProperty("SHAREBOX_STORE_FILE") as String?) ?: "keystore/sharebox.keystore"
-            )
-            storePassword = (project.findProperty("SHAREBOX_STORE_PASSWORD") as String?) ?: "REMOVED"
-            keyAlias = (project.findProperty("SHAREBOX_KEY_ALIAS") as String?) ?: "sharebox"
-            keyPassword = (project.findProperty("SHAREBOX_KEY_PASSWORD") as String?) ?: "REMOVED"
+        if (hasReleaseKey) {
+            create("release") {
+                storeFile = file(keyProps.getProperty("storeFile"))
+                storePassword = keyProps.getProperty("storePassword")
+                keyAlias = keyProps.getProperty("keyAlias")
+                keyPassword = keyProps.getProperty("keyPassword")
+            }
         }
     }
 
@@ -33,7 +43,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName(if (hasReleaseKey) "release" else "debug")
         }
     }
 

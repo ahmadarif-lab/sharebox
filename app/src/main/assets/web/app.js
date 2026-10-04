@@ -1141,6 +1141,12 @@
       $('#stUsed').textContent = fmtSize(used) + ' used';
       $('#stPct').textContent = pct + '%';
       $('#stFill').style.transform = 'scaleX(' + (pct / 100) + ')';
+      // Nama server: tampil hanya kalau pernah diatur di app (name kosong = disembunyikan).
+      const nm = (i.name || '').trim();
+      const nameEl = $('#srvName');
+      nameEl.textContent = nm;
+      nameEl.hidden = !nm;
+      document.title = nm ? nm + ' \u00b7 ShareBox' : 'ShareBox';
     } catch (e) { /* ignore */ }
   }
 

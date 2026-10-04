@@ -308,6 +308,8 @@ class ApiHandler(private val ctx: Context) {
         res.sendJson(
             JSONObject()
                 .put("device", Prefs.displayName())
+                // Nama yang diatur user di Settings; kosong = belum pernah diatur (web UI tidak menampilkannya).
+                .put("name", Prefs.deviceName.trim())
                 .put("model", NetInfo.deviceName())
                 .put("app", BuildConfig.VERSION_NAME)
                 .put("android", Build.VERSION.RELEASE)
