@@ -1,6 +1,7 @@
 package com.ahmadarif.sharebox.ui
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -80,6 +81,19 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
         visible = true
         handler.removeCallbacks(ticker)
         handler.post(ticker)
+        maybeAskStorage()
+    }
+
+    /** Tanya sekali saja: app ini perlu akses semua file untuk menampilkan & mengirim file. */
+    private fun maybeAskStorage() {
+        if (Storage.hasAllFiles(act) || Prefs.storageAsked) return
+        Prefs.storageAsked = true
+        AlertDialog.Builder(act)
+            .setTitle(R.string.storage_prompt_title)
+            .setMessage(R.string.storage_prompt_msg)
+            .setPositiveButton(R.string.storage_prompt_grant) { _, _ -> Ui.grantAllFiles(act) }
+            .setNegativeButton(R.string.storage_prompt_later, null)
+            .show()
     }
 
     override fun onHide() {

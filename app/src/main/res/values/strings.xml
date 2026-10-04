@@ -62,13 +62,14 @@
     <string name="set_save">Save</string>
     <string name="set_saved">Saved</string>
     <string name="set_storage">Storage access</string>
-    <string name="set_storage_app">App folder</string>
     <string name="set_storage_app_desc">Safe, no permission needed. Files live in Android/data/…/files/share</string>
-    <string name="set_storage_all">All files (/sdcard)</string>
     <string name="set_storage_all_desc">Full access to Download, DCIM, Pictures, and more.</string>
+    <string name="set_storage_need">ShareBox needs access to all files to list, send, and receive them. Until you allow it, only the app folder is used.</string>
     <string name="set_grant">Grant all files access</string>
-    <string name="set_use_app">Use app folder</string>
-    <string name="set_use_all">Use all files</string>
+    <string name="storage_prompt_title">Allow access to your files?</string>
+    <string name="storage_prompt_msg">ShareBox lists, sends, and receives files anywhere on this phone, so it needs all-files access. Android asks you to allow it in Settings — one tap, one time.</string>
+    <string name="storage_prompt_grant">Open settings</string>
+    <string name="storage_prompt_later">Not now</string>
     <string name="set_about">About</string>
     <string name="set_about_text">ShareBox %1$s\nWi-Fi file transfer, no internet needed. HTTP server + web file manager for PC, plus one-tap phone-to-phone sending.\n\nBuilt on the plain Android framework — tiny APK, no ads, no trackers.</string>
 

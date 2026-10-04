@@ -24,7 +24,10 @@ object Storage {
     }
 
     fun root(ctx: Context): File {
-        if (Prefs.useAllFiles && hasAllFiles(ctx)) {
+        // Selalu pakai seluruh penyimpanan kalau izinnya ada: app ini memang perlu
+        // membaca file milik user. Folder aplikasi hanya jaring pengaman kalau izin
+        // belum/tidak diberikan, supaya app tetap jalan.
+        if (hasAllFiles(ctx)) {
             val ext = Environment.getExternalStorageDirectory()
             if (ext.exists()) return ext
         }

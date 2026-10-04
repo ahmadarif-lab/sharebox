@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.webkit.MimeTypeMap
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -92,6 +93,30 @@ object Ui {
         SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault()).format(Date(t))
 
     fun dp(ctx: Context, v: Float): Int = (v * ctx.resources.displayMetrics.density).toInt()
+
+    /** Buka layar izin "semua file" (API 30+) atau minta izin storage runtime (API < 30). */
+    fun grantAllFiles(act: android.app.Activity) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            try {
+                act.startActivity(
+                    Intent(
+                        android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                        Uri.parse("package:" + act.packageName)
+                    )
+                )
+            } catch (e: Exception) {
+                act.startActivity(Intent(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
+            }
+        } else {
+            act.requestPermissions(
+                arrayOf(
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ),
+                Req.STORAGE
+            )
+        }
+    }
 
     fun openFile(ctx: Context, file: File) {
         val uri = Uri.Builder()

@@ -1,10 +1,5 @@
 package com.ahmadarif.sharebox.ui
 
-import android.Manifest
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
@@ -26,12 +21,11 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
     private val btnGrant: View = root.findViewById(R.id.btn_grant)
     private val btnGrantText: TextView = root.findViewById(R.id.btn_grant_text)
     private val tvAbout: TextView = root.findViewById(R.id.tv_about)
+    private var lastRoot: String = ""
 
     init {
         root.findViewById<View>(R.id.btn_save).setOnClickListener { save() }
         btnGrant.setOnClickListener { grantAllFiles() }
-        root.findViewById<View>(R.id.btn_use_app).setOnClickListener { useApp() }
-        root.findViewById<View>(R.id.btn_use_all).setOnClickListener { useAll() }
         tvAbout.text = act.getString(R.string.set_about_text, BuildConfig.VERSION_NAME)
     }
 
@@ -49,11 +43,18 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
         val granted = Storage.hasAllFiles(act)
         tvStoragePath.text = runCatching { Storage.root(act).absolutePath }.getOrDefault("")
         tvStorageDesc.setText(
-            if (granted && Prefs.useAllFiles) R.string.set_storage_all_desc
-            else R.string.set_storage_app_desc
+            if (granted) R.string.set_storage_all_desc else R.string.set_storage_need
         )
         btnGrant.visibility = if (granted) View.GONE else View.VISIBLE
         btnGrantText.setText(R.string.set_grant)
+
+        // Kalau izin baru diberikan (atau dicabut), samakan folder kerja Files tab + server.
+        val rootNow = runCatching { Storage.root(act).absolutePath }.getOrDefault("")
+        if (rootNow != lastRoot) {
+            lastRoot = rootNow
+            ServerController.refreshRoot()
+            act.filesTab.openPath(Storage.root(act))
+        }
     }
 
     private fun save() {
@@ -73,42 +74,6 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
     }
 
     private fun grantAllFiles() {
-        if (Build.VERSION.SDK_INT >= 30) {
-            try {
-                act.startActivity(
-                    Intent(
-                        Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                        Uri.parse("package:" + act.packageName)
-                    )
-                )
-            } catch (e: Exception) {
-                act.startActivity(Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION))
-            }
-        } else {
-            act.requestPermissions(
-                arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ),
-                Req.STORAGE
-            )
-        }
-    }
-
-    private fun useApp() {
-        Prefs.useAllFiles = false
-        ServerController.refreshRoot()
-        refresh()
-    }
-
-    private fun useAll() {
-        if (!Storage.hasAllFiles(act)) {
-            Ui.toast(act, act.getString(R.string.set_grant))
-            grantAllFiles()
-            return
-        }
-        Prefs.useAllFiles = true
-        ServerController.refreshRoot()
-        refresh()
+        Ui.grantAllFiles(act)
     }
 }

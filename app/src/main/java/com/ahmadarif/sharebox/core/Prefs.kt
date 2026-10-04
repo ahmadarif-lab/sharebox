@@ -21,9 +21,10 @@ object Prefs {
         get() = sp.getString("device", "").orEmpty()
         set(v) = sp.edit().putString("device", v).apply()
 
-    var useAllFiles: Boolean
-        get() = sp.getBoolean("all_files", false)
-        set(v) = sp.edit().putBoolean("all_files", v).apply()
+    /** Sekali saja: sudah pernah menawarkan izin "semua file"? */
+    var storageAsked: Boolean
+        get() = sp.getBoolean("storage_asked", false)
+        set(v) = sp.edit().putBoolean("storage_asked", v).apply()
 
     fun displayName(): String = deviceName.ifBlank { Build.MODEL ?: "Android" }
 }
