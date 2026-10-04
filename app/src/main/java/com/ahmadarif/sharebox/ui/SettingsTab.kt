@@ -14,6 +14,7 @@ import com.ahmadarif.sharebox.R
 import com.ahmadarif.sharebox.core.Prefs
 import com.ahmadarif.sharebox.core.ServerController
 import com.ahmadarif.sharebox.core.Storage
+import com.ahmadarif.sharebox.core.Updater
 
 class SettingsTab(activity: MainActivity) : BaseTab(activity) {
 
@@ -22,6 +23,7 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
     private val etName: EditText = root.findViewById(R.id.et_name)
     private val tvStorageDesc: TextView = root.findViewById(R.id.tv_storage_desc)
     private val swStorage: Switch = root.findViewById(R.id.sw_storage)
+    private val swUpdates: Switch = root.findViewById(R.id.sw_updates)
     private val themeChips: Map<String, TextView> = mapOf(
         "system" to root.findViewById(R.id.theme_system),
         "light" to root.findViewById(R.id.theme_light),
@@ -34,6 +36,11 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
         root.findViewById<View>(R.id.btn_save).setOnClickListener { save() }
         root.findViewById<View>(R.id.row_storage).setOnClickListener { toggleStorage() }
         themeChips.forEach { (mode, chip) -> chip.setOnClickListener { setTheme(mode) } }
+        root.findViewById<View>(R.id.row_updates).setOnClickListener {
+            Prefs.updateCheck = !Prefs.updateCheck
+            swUpdates.isChecked = Prefs.updateCheck
+        }
+        root.findViewById<View>(R.id.btn_check_now).setOnClickListener { checkNow() }
         tvAbout.text = act.getString(R.string.set_about_text, BuildConfig.VERSION_NAME)
     }
 
@@ -51,6 +58,7 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
         tvStorageDesc.setText(
             if (granted) R.string.set_storage_all_desc else R.string.set_storage_need
         )
+        swUpdates.isChecked = Prefs.updateCheck
         paintTheme()
 
         // Kalau izin baru diberikan (atau dicabut), samakan folder kerja Files tab + server.
@@ -81,6 +89,22 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
             )
         } else {
             Ui.grantAllFiles(act)
+        }
+    }
+
+    /** Cek manual: selalu jalan (abaikan batas sehari dan sakelar), dan memberi tahu hasilnya. */
+    private fun checkNow() {
+        Updater.check { result ->
+            when (result) {
+                is Updater.Result.Available -> {
+                    Prefs.updateDismissed = ""
+                    Ui.toast(act, act.getString(R.string.update_available_sub, result.info.version))
+                    act.select(0)
+                }
+                Updater.Result.UpToDate ->
+                    Ui.toast(act, act.getString(R.string.update_up_to_date, BuildConfig.VERSION_NAME))
+                Updater.Result.Failed -> Ui.toast(act, act.getString(R.string.update_failed))
+            }
         }
     }
 

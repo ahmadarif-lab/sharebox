@@ -25,6 +25,24 @@ object Prefs {
         get() = sp.getBoolean("storage_asked", false)
         set(v) = sp.edit().putBoolean("storage_asked", v).apply()
 
+    /** Cek versi baru otomatis (maksimal sekali sehari); bisa dimatikan di Settings. */
+    var updateCheck: Boolean
+        get() = sp.getBoolean("update_check", true)
+        set(v) = sp.edit().putBoolean("update_check", v).apply()
+
+    var updateLastCheck: Long
+        get() = sp.getLong("update_last_check", 0L)
+        set(v) = sp.edit().putLong("update_last_check", v).apply()
+
+    /** latest.json terakhir yang valid, supaya banner tetap muncul tanpa jaringan. */
+    var updateManifest: String
+        get() = sp.getString("update_manifest", "").orEmpty()
+        set(v) = sp.edit().putString("update_manifest", v).apply()
+
+    var updateDismissed: String
+        get() = sp.getString("update_dismissed", "").orEmpty()
+        set(v) = sp.edit().putString("update_dismissed", v).apply()
+
     /** Tema app: "system" (ikut HP), "light", atau "dark". */
     var theme: String
         get() = sp.getString("theme", "system").orEmpty().ifEmpty { "system" }

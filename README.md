@@ -52,6 +52,8 @@ and the whole app is about 220 KB, built on the plain Android framework with a s
 - Live transfer list with direction (sent or received), speed and progress.
 - Foreground service with a Wi-Fi lock, so long transfers survive a locked screen.
 - Light, dark or follow-the-system theme.
+- Update check: once a day the app reads `latest.json` from apps.bontot.my.id and offers a newer
+  release. The request carries nothing about you or your version, and it can be turned off in Settings.
 
 ## Screenshots
 
@@ -101,6 +103,7 @@ keyPassword=...
 | Web server | HTTP on port `2999`, fixed. Streams files with Range support. No authentication: use it on networks you trust. |
 | Phone to phone | Its own TCP protocol (SBX1) on port `47778`, open only while **Receive** is on. |
 | Discovery | UDP broadcast on port `47777`, used by "Devices on this network". It finds devices on the same network, not physically near ones. |
+| Updates | `GET https://apps.bontot.my.id/sharebox/latest.json`, at most once a day; only links to `apps.bontot.my.id` and `github.com` are accepted. |
 | Storage | App folder only, or all files with the "All files access" permission. Received files go to `Inbox`. |
 
 ### Direct protocol (SBX1)

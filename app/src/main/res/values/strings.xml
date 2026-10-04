@@ -119,6 +119,15 @@
     <string name="set_saved">Saved</string>
     <string name="set_storage">Storage access</string>
     <string name="set_appearance">Appearance</string>
+    <string name="set_updates">Check for updates</string>
+    <string name="set_updates_desc">Once a day, from apps.bontot.my.id. Sends nothing about you.</string>
+    <string name="set_check_now">Check now</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_available_sub">ShareBox %1$s is out.</string>
+    <string name="update_download">Download</string>
+    <string name="update_later">Later</string>
+    <string name="update_up_to_date">You\'re up to date (%1$s)</string>
+    <string name="update_failed">Couldn\'t check for updates. Are you online?</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>

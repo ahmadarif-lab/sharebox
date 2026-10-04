@@ -19,6 +19,7 @@ import com.ahmadarif.sharebox.R
 import com.ahmadarif.sharebox.core.Prefs
 import com.ahmadarif.sharebox.core.ServerController
 import com.ahmadarif.sharebox.core.Storage
+import com.ahmadarif.sharebox.core.Updater
 import com.ahmadarif.sharebox.core.TransferDir
 import com.ahmadarif.sharebox.core.TransferTracker
 import com.ahmadarif.sharebox.files.FileRepo
@@ -89,6 +90,8 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
     private val cardRecvQr: View = root.findViewById(R.id.card_recv_qr)
     private val imgRecvQr: ImageView = root.findViewById(R.id.img_recv_qr)
     private val tvRecvQrHint: TextView = root.findViewById(R.id.tv_recv_qr_hint)
+    private val cardUpdate: View = root.findViewById(R.id.card_update)
+    private val tvUpdateSub: TextView = root.findViewById(R.id.tv_update_sub)
     private val catGrid: LinearLayout = root.findViewById(R.id.cat_grid)
     private val cardRecent: View = root.findViewById(R.id.card_recent)
     private val recentActivity: LinearLayout = root.findViewById(R.id.recent_activity)
@@ -132,6 +135,19 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
         btnWeb.setOnClickListener { openPage(Page.WEB) }
         btnBack.setOnClickListener { openPage(Page.HOME) }
         buildCategoryGrid()
+        root.findViewById<View>(R.id.btn_update_later).setOnClickListener {
+            Updater.pending()?.let { Updater.dismiss(it) }
+            renderUpdate()
+        }
+        root.findViewById<View>(R.id.btn_update_download).setOnClickListener {
+            Updater.pending()?.let {
+                try {
+                    act.startActivity(Intent(Intent.ACTION_VIEW, it.link))
+                } catch (_: Exception) {
+                    Ui.toast(act, act.getString(R.string.no_app_open))
+                }
+            }
+        }
         btnWebServer.setOnClickListener { toggleMode(ServerService.MODE_WEB) }
     }
 
@@ -258,6 +274,9 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
         handler.post(ticker)
         maybeAskStorage()
         paintPage()
+        // Cek versi baru di latar (maks. sekali sehari); hasilnya muncul sebagai banner di Home.
+        Updater.checkIfDue { renderUpdate() }
+        renderUpdate()
     }
 
     /** Tanya sekali saja: app ini perlu akses semua file untuk menampilkan & mengirim file. */
@@ -416,6 +435,7 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
         }
 
         renderReceiveQr()
+        renderUpdate()
         renderPeers()
         renderActivity(recvActivity, tvRecvEmpty, TransferDir.IN)
         renderActivity(sendActivity, tvSendEmpty, TransferDir.OUT)
@@ -469,6 +489,15 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
             ssid = hot?.ssid,
             pass = hot?.pass,
         )
+    }
+
+    /** Banner "Update available": hanya di halaman Home, dan hanya untuk versi yang belum ditutup user. */
+    private fun renderUpdate() {
+        val info = if (page == Page.HOME) Updater.pending() else null
+        cardUpdate.visibility = if (info != null) View.VISIBLE else View.GONE
+        if (info == null) return
+        val base = act.getString(R.string.update_available_sub, info.version)
+        tvUpdateSub.text = if (info.note != null) base + "\n" + info.note else base
     }
 
     private fun renderReceiveQr() {
