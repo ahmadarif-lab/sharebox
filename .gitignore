@@ -1,0 +1,15 @@
+.gradle/
+build/
+local.properties
+.idea/
+*.iml
+.DS_Store
+captures/
+.kotlin/
+
+# Playwright artifacts (traces, page snapshots, and large test downloads)
+.playwright-mcp/
+
+# NOTE: the release keystore (keystore/sharebox.keystore) is committed on purpose —
+# it is the app's signing identity and is required to publish updates. It is a
+# self-signed key for a personal project and this repository has no remote.

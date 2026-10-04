@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg">#F4F6FB</color>
+    <color name="card">#FFFFFF</color>
+    <color name="fg">#171B26</color>
+    <color name="muted">#6B7280</color>
+    <color name="border">#E4E8F0</color>
+    <color name="accent">#3B6BFF</color>
+    <color name="accent_2">#7B5CFF</color>
+    <color name="accent_soft">#E8EEFF</color>
+    <color name="on_accent">#FFFFFF</color>
+    <color name="danger">#E5484D</color>
+    <color name="danger_soft">#FDECEC</color>
+    <color name="ok">#22A06B</color>
+    <color name="chip">#EEF1F7</color>
+    <color name="nav_bg">#FFFFFF</color>
+    <color name="hero_fg">#FFFFFF</color>
+    <color name="hero_fg_dim">#D7E1FF</color>
+    <color name="ic_launcher_background">#3B6BFF</color>
+    <color name="ic_launcher_solid">#F6F8FC</color>
+</resources>

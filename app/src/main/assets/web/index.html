@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#3B6BFF">
+<link rel="icon" type="image/png" href="/icon.png">
+<title>ShareBox</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo"><img src="/icon.png" alt="ShareBox"></span>
+      <div class="brand-txt">
+        <h1>ShareBox</h1>
+        <p>Share files over WiFi, instantly</p>
+      </div>
+    </div>
+
+    <div class="side-actions">
+      <button class="upload-btn" id="btnUpload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 16V5m0 0L7.5 9.5M12 5l4.5 4.5M4.5 19.5h15"/>
+        </svg>
+        <span class="utxt"><b>Upload Files</b><small>Choose files or drag &amp; drop</small></span>
+      </button>
+
+      <button class="ghost-btn" id="btnNewFolder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 7.5A2.5 2.5 0 015.5 5h3.2l2 2.2h7.8A2.5 2.5 0 0121 9.7v7.8a2.5 2.5 0 01-2.5 2.5h-13A2.5 2.5 0 013 17.5z"/>
+          <path d="M12 11.5v5m-2.5-2.5h5"/>
+        </svg>
+        New Folder
+      </button>
+    </div>
+
+    <nav class="nav" id="nav">
+      <a href="#" data-nav="all" class="active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 015.5 5h3.2l2 2.2h7.8A2.5 2.5 0 0121 9.7v7.8a2.5 2.5 0 01-2.5 2.5h-13A2.5 2.5 0 013 17.5z"/></svg>
+        <span>All Files</span><em id="cntAll">0</em>
+      </a>
+      <a href="#" data-nav="recent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+        <span>Recent</span>
+      </a>
+      <a href="#" data-nav="images">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4.5 17.5l4.5-4.5 3.5 3.5 3-3 4 4"/></svg>
+        <span>Images</span>
+      </a>
+      <a href="#" data-nav="videos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M10.5 9.5l4 2.5-4 2.5z"/></svg>
+        <span>Videos</span>
+      </a>
+      <a href="#" data-nav="music">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18.5V6.8l9-2v11.7"/><circle cx="6.8" cy="18.5" r="2.3"/><circle cx="15.8" cy="16.5" r="2.3"/></svg>
+        <span>Music</span>
+      </a>
+      <a href="#" data-nav="documents">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h7L18 8v12.5H6.5z"/><path d="M13.5 3.5V8H18M9.5 12.5h5m-5 3.5h5"/></svg>
+        <span>Documents</span>
+      </a>
+      <a href="#" data-nav="archives">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 7.5l7.5-4 7.5 4v9l-7.5 4-7.5-4z"/><path d="M4.5 7.5L12 11.5l7.5-4M12 11.5V20"/></svg>
+        <span>Archives</span>
+      </a>
+      <a href="#" data-nav="others">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>
+        <span>Others</span>
+      </a>
+    </nav>
+
+    <div class="storage-card">
+      <div class="st-row"><b>Storage</b><span id="stFree">&hellip;</span></div>
+      <div class="st-bar"><div class="st-fill" id="stFill"></div></div>
+      <div class="st-row small"><span id="stUsed"></span><span id="stPct"></span></div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <header class="topbar">
+      <div class="status">
+        <span class="dot"></span>
+        <div><b>WiFi Connected</b><small id="hostText">&hellip;</small></div>
+      </div>
+      <button class="icon-btn" id="btnTheme" title="Toggle dark mode">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 13.2A8.5 8.5 0 1110.8 3.5a7 7 0 009.7 9.7z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7"/></svg>
+      </button>
+    </header>
+
+    <div class="listbar">
+      <nav class="crumbs" id="crumbs"></nav>
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.3"/><path d="M15.5 15.5L20 20"/></svg>
+        <input id="search" placeholder="Search files&hellip;" autocomplete="off" spellcheck="false">
+      </label>
+    </div>
+    <div class="loadbar" id="loadbar" hidden></div>
+
+    <div class="table">
+      <div class="thead">
+        <label class="check"><input type="checkbox" id="selAll"></label>
+        <button class="sortbtn" id="sortName">Name
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+        </button>
+        <span>Size</span>
+        <span>Type</span>
+        <span>Modified</span>
+        <span>Actions</span>
+      </div>
+      <div id="rows" class="rows"></div>
+      <div class="empty" id="empty" hidden>This folder is empty</div>
+    </div>
+
+    <div class="selbar" id="selbar" hidden>
+      <span id="selCount">0 selected</span>
+      <button class="btn" id="btnDownloadSel">Download</button>
+      <button class="btn danger" id="btnDeleteSel">Delete</button>
+      <button class="btn" id="btnClearSel">Clear</button>
+    </div>
+  </main>
+
+  <!-- ============ RIGHT ============ -->
+  <aside class="rightbar">
+    <div class="card connect">
+      <div class="c-head">
+        <span class="c-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>
+        </span>
+        <div>
+          <b>Connect on Your Phone</b>
+          <p>Open this address in your phone's browser (same WiFi)</p>
+        </div>
+      </div>
+      <div class="urlbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.3 2.3 3.4 5.2 3.4 8.5S14.3 18.2 12 20.5c-2.3-2.3-3.4-5.2-3.4-8.5S9.7 5.8 12 3.5z"/></svg>
+        <code id="urlText">&hellip;</code>
+        <button class="icon-btn small" id="btnCopy" title="Copy address">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11" height="11" rx="2.2"/><path d="M15.5 5.5v-1a2 2 0 00-2-2h-9a2 2 0 00-2 2v9a2 2 0 002 2h1"/></svg>
+        </button>
+      </div>
+      <div class="qrwrap">
+        <span>or scan QR code</span>
+        <img id="qrImg" alt="QR code to open this address on another device" width="300" height="300"
+             src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- transfer panel -->
+<div id="progress" class="progress"></div>
+
+<!-- drag & drop hint (muncul hanya saat men-drag file) -->
+<div id="dropHint" class="drop-hint" hidden>
+  <div class="drop-hint-inner">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M7 17.5a4 4 0 01-.6-7.95A5.5 5.5 0 0117.2 8.6 3.8 3.8 0 0117 16h-1.2"/>
+      <path d="M12 20v-7m0 0l-3 3m3-3l3 3"/>
+    </svg>
+    <b>Drop files to upload</b>
+  </div>
+</div>
+
+<!-- preview -->
+<div id="preview" class="preview" hidden>
+  <div class="preview-head">
+    <span id="previewName"></span>
+    <div class="pv-tools">
+      <span class="pv-group" id="pvNav" hidden>
+        <button class="pbtn" id="pvPrev" title="Previous (←)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 6l-6 6 6 6"/></svg>
+        </button>
+        <span class="pv-count" id="pvCount">1 / 1</span>
+        <button class="pbtn" id="pvNext" title="Next (→)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6l6 6-6 6"/></svg>
+        </button>
+      </span>
+      <span class="pv-group" id="pvZoom" hidden>
+        <button class="pbtn" id="pvZoomOut" title="Zoom out (−)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M6 12h12"/></svg>
+        </button>
+        <span class="pv-count" id="pvZoomLabel">100%</span>
+        <button class="pbtn" id="pvZoomIn" title="Zoom in (+)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 6v12M6 12h12"/></svg>
+        </button>
+        <button class="pbtn" id="pvZoomReset" title="Reset zoom (0)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 11-2.4-5.7"/><path d="M20 4.6V10h-5.4"/></svg>
+        </button>
+      </span>
+      <button class="btn" id="previewClose">Close</button>
+    </div>
+  </div>
+  <div class="preview-body" id="previewBody"></div>
+  <div class="pv-loading" id="pvLoading" hidden><span class="spin"></span></div>
+  <button class="pv-download" id="pvDownload" title="Save this file to your device">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4.5v10m0 0l-4-4m4 4l4-4M5 19.5h14"/>
+    </svg>
+    <span id="pvDlLabel">Download</span>
+  </button>
+  <button class="pv-float prev" id="pvPrevFloat" hidden title="Previous">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+  </button>
+  <button class="pv-float next" id="pvNextFloat" hidden title="Next">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- prompt dialog -->
+<div class="dialog-backdrop" id="dlgBackdrop" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <h2 id="dlgTitle">Title</h2>
+    <input id="dlgInput" type="text" autocomplete="off">
+    <div class="dialog-actions">
+      <button class="btn" id="dlgCancel">Cancel</button>
+      <button class="btn primary" id="dlgOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="fileInput" multiple hidden>
+<script src="/app.js"></script>
+</body>
+</html>
