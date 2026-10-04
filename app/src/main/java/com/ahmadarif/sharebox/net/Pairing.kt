@@ -41,6 +41,13 @@ object Pairing {
         tokens[peerId] = token
     }
 
+    /** Setujui langsung (pengirim membawa kunci sesi dari QR) dan terbitkan token. */
+    fun grant(peerId: String): String {
+        val token = UUID.randomUUID().toString()
+        tokens[peerId] = token
+        return token
+    }
+
     fun isDeclined(ip: String?): Boolean = ip != null && declinedIps.contains(ip)
 
     fun clear() {
@@ -50,12 +57,11 @@ object Pairing {
     }
 
     /**
-     * Dipanggil dari endpoint /api/pair/request di thread HTTP: menampilkan notifikasi
+     * Dipanggil dari DirectServer di thread koneksi: menampilkan notifikasi
      * persetujuan lalu menunggu keputusan user (maks 30 detik).
      * Hasil: token (kalau disetujui) atau alasan kegagalan ("declined" / "timeout").
      */
     fun requestApproval(ctx: Context, peerId: String, peerName: String, remoteIp: String?): Pair<String?, String?> {
-        tokens[peerId]?.let { return it to null }
         val requestId = UUID.randomUUID().toString()
         val latch = CountDownLatch(1)
         var approved = false

@@ -7,14 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
 import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.TextView
 import com.ahmadarif.sharebox.MainActivity
 import com.ahmadarif.sharebox.R
 import com.ahmadarif.sharebox.core.Storage
-import com.ahmadarif.sharebox.core.TransferDir
 import com.ahmadarif.sharebox.core.TransferState
 import com.ahmadarif.sharebox.core.TransferTracker
 import java.io.File
@@ -45,7 +42,10 @@ class TransfersTab(activity: MainActivity) : BaseTab(activity) {
         tvEmpty.setCompoundDrawableTintList(ColorStateList.valueOf(act.getColor(R.color.muted)))
         listView.setOnItemClickListener { _, _, position, _ ->
             val item = adapter.itemAt(position) ?: return@setOnItemClickListener
-            if (item.state == TransferState.DONE) openFolder(item.folder)
+            val apk = item.path?.takeIf { Ui.isApk(item.name) && item.state == TransferState.DONE }
+            if (Ui.viewablePath(item) != null) openViewer(item)
+            else if (apk != null && File(apk).exists()) Ui.openFile(act, File(apk))
+            else if (item.state == TransferState.DONE) openFolder(item.folder)
         }
         root.findViewById<View>(R.id.btn_clear_done).setOnClickListener {
             TransferTracker.clearFinished()
@@ -54,6 +54,13 @@ class TransfersTab(activity: MainActivity) : BaseTab(activity) {
         root.findViewById<View>(R.id.btn_inbox).setOnClickListener {
             openFolder("Inbox")
         }
+    }
+
+    /** Gambar/video hasil transfer dibuka di viewer; geser untuk pindah antar media transfer lain. */
+    private fun openViewer(item: TransferTracker.Item) {
+        val media = TransferTracker.items().mapNotNull { Ui.viewablePath(it) }.distinct()
+        val index = media.indexOf(Ui.viewablePath(item))
+        if (index >= 0) ViewerActivity.open(act, media, index)
     }
 
     private fun openFolder(folder: String?) {
@@ -98,50 +105,7 @@ class TransfersTab(activity: MainActivity) : BaseTab(activity) {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView
                 ?: LayoutInflater.from(act).inflate(R.layout.row_transfer, parent, false)
-            val item = data[position]
-            val icon = view.findViewById<ImageView>(R.id.img_dir)
-            val name = view.findViewById<TextView>(R.id.tv_name)
-            val meta = view.findViewById<TextView>(R.id.tv_meta)
-            val progress = view.findViewById<ProgressBar>(R.id.progress)
-
-            val dest = item.folder?.takeIf { it.isNotEmpty() }?.let { " \u2192 $it" } ?: ""
-            icon.setImageResource(
-                if (item.dir == TransferDir.IN) R.drawable.ic_download else R.drawable.ic_upload
-            )
-            name.text = item.name
-            meta.text = when (item.state) {
-                TransferState.RUNNING -> {
-                    val size = if (item.total > 0) {
-                        "${Ui.bytes(item.done)} / ${Ui.bytes(item.total)}"
-                    } else {
-                        Ui.bytes(item.done)
-                    }
-                    if (item.paused) "Paused \u00B7 $size" else "Running\u2026 $size$dest"
-                }
-                TransferState.DONE ->
-                    "Done \u00B7 ${Ui.bytes(if (item.total > 0) item.total else item.done)}$dest \u00B7 tap to open"
-                TransferState.FAILED -> "Failed: ${item.error ?: "?"}"
-            }
-            when {
-                item.state == TransferState.DONE -> {
-                    progress.isIndeterminate = false
-                    progress.progress = 1000
-                    progress.progressTintList = ColorStateList.valueOf(act.getColor(R.color.ok))
-                }
-                item.state == TransferState.FAILED -> {
-                    progress.isIndeterminate = false
-                    progress.progress = (item.fraction * 1000).toInt()
-                    progress.progressTintList = ColorStateList.valueOf(act.getColor(R.color.danger))
-                }
-                item.total > 0 -> {
-                    progress.isIndeterminate = false
-                    progress.progress = (item.fraction * 1000).toInt()
-                    progress.progressTintList = ColorStateList.valueOf(act.getColor(R.color.accent))
-                }
-                else -> {
-                    progress.isIndeterminate = true
-                }
-            }
+            Ui.bindTransfer(act, view, data[position])
             return view
         }
     }

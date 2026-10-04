@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Cermin tema gelap web UI: accent terang dengan tinta gelap di atasnya. -->
-    <color name="bg">#0D1017</color>
-    <color name="card">#151A24</color>
-    <color name="fg">#E8ECF5</color>
-    <color name="muted">#9AA6BD</color>
-    <color name="border">#242C3D</color>
-    <color name="accent">#8FB0FF</color>
+    <color name="bg">#0F121A</color>
+    <color name="card">#171B26</color>
+    <color name="fg">#E8ECF4</color>
+    <color name="muted">#98A2B8</color>
+    <color name="border">#262C3B</color>
+    <color name="accent">#7FA2FF</color>
     <color name="accent_2">#A892FF</color>
-    <color name="accent_soft">#1E2740</color>
-    <color name="on_accent">#0B0F18</color>
+    <color name="accent_soft">#1C2540</color>
+    <color name="on_accent">#0B1020</color>
+    <color name="recv">#4CC38A</color>
+    <color name="recv_soft">#14301F</color>
+    <color name="on_recv">#0B1020</color>
     <color name="danger">#FF7B80</color>
-    <color name="danger_soft">#2B1719</color>
-    <color name="ok">#4ADE9C</color>
-    <color name="chip">#1A2130</color>
-    <color name="nav_bg">#121721</color>
-    <color name="hero_fg">#FFFFFF</color>
-    <color name="hero_fg_dim">#E6EDFF</color>
+    <color name="danger_soft">#3A1B22</color>
+    <color name="ok">#4CC38A</color>
+    <color name="chip">#1D2230</color>
+    <color name="nav_bg">#131722</color>
 </resources>

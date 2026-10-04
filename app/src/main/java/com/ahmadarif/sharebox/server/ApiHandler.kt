@@ -19,7 +19,7 @@ import com.ahmadarif.sharebox.core.Storage
 import com.ahmadarif.sharebox.core.TransferDir
 import com.ahmadarif.sharebox.core.TransferTracker
 import com.ahmadarif.sharebox.net.NetInfo
-import com.ahmadarif.sharebox.net.Pairing
+import com.ahmadarif.sharebox.core.Notifier
 import com.ahmadarif.sharebox.net.PeerDiscovery
 import com.ahmadarif.sharebox.net.Qr
 import org.json.JSONArray
@@ -46,7 +46,7 @@ class ApiHandler(private val ctx: Context) {
                     "/", "/index.html" -> asset(res, "index.html")
                     "/style.css" -> asset(res, "style.css")
                     "/app.js" -> asset(res, "app.js")
-                    "/icon.png" -> asset(res, "icon.png")
+                    "/icon.webp" -> asset(res, "icon.webp")
                     "/favicon.ico" -> {
                         res.status = 204
                         res.statusText = "No Content"
@@ -72,7 +72,6 @@ class ApiHandler(private val ctx: Context) {
                     "/api/pause" -> pause(req, res)
                     "/api/resume" -> resume(req, res)
                     "/api/cancel" -> cancel(req, res)
-                    "/api/pair/request" -> pairRequest(req, res)
                     else -> notFound(res)
                 }
                 else -> {
@@ -101,6 +100,7 @@ class ApiHandler(private val ctx: Context) {
             "css" -> "text/css; charset=utf-8"
             "js" -> "application/javascript; charset=utf-8"
             "png" -> "image/png"
+            "webp" -> "image/webp"
             "jpg", "jpeg" -> "image/jpeg"
             else -> "application/octet-stream"
         }
@@ -192,7 +192,7 @@ class ApiHandler(private val ctx: Context) {
         // Preview/streaming (inline) tidak dihitung sebagai transfer — hanya download asli yang di-track.
         val trackId = if (inline) -1L else TransferTracker.start(
             file.name, TransferDir.OUT, end - start + 1,
-            Fs.rel(root(), file.parentFile ?: root())
+            Fs.rel(root(), file.parentFile ?: root()), file.absolutePath
         )
         val raf = RandomAccessFile(file, "r")
         raf.seek(start)
@@ -588,38 +588,14 @@ class ApiHandler(private val ctx: Context) {
         res.sendJson(JSONObject().put("peers", arr))
     }
 
-    /**
-     * Permintaan pairing dari HP lain. Permintaan ini MENUNGGU pemilik HP ini menekan
-     * Approve/Decline (maks 30 detik) lalu membalas token kalau disetujui.
-     */
-    private fun pairRequest(req: HttpRequest, res: HttpResult) {
-        val body = JSONObject(req.bodyString())
-        val peerId = body.optString("id")
-        if (peerId.isEmpty()) throw IllegalArgumentException("id required")
-        val peerName = body.optString("name", "Android").take(40)
-        val (token, error) = Pairing.requestApproval(ctx, peerId, peerName, req.remote)
-        if (token == null) {
-            res.sendJson(JSONObject().put("ok", false).put("error", error ?: "declined"))
-        } else {
-            res.sendJson(
-                JSONObject()
-                    .put("ok", true)
-                    .put("token", token)
-                    .put("name", Prefs.displayName())
-            )
-        }
-    }
-
     private fun upload(req: HttpRequest, res: HttpResult) {
-        // Pairing: device yang ditolak tidak boleh menaruh file selama sesi ini.
-        if (Pairing.isDeclined(req.remote)) throw SecurityException("this device was declined")
         val r = root()
         val dir = Fs.resolve(r, req.q("path") ?: "")
         if (!dir.isDirectory && !dir.mkdirs()) throw SecurityException("Cannot create destination folder")
         val name = Fs.sanitizeName(req.q("name") ?: "upload.bin")
         val target = Fs.unique(dir, name)
-        val tmp = File(dir, ".sharebox-part-${System.currentTimeMillis()}-${(0..9999).random()}")
-        val trackId = TransferTracker.start(name, TransferDir.IN, req.contentLength, Fs.rel(r, dir))
+        val tmp = File(dir, ".sharebox-part-${System.currentTimeMillis()}-${java.util.concurrent.ThreadLocalRandom.current().nextInt(10_000)}")
+        val trackId = TransferTracker.start(name, TransferDir.IN, req.contentLength, Fs.rel(r, dir), target.absolutePath)
         TransferChannels.register(trackId, req.channel)
         var done = 0L
         var lastReport = 0L
@@ -695,23 +671,7 @@ class ApiHandler(private val ctx: Context) {
 
     // ---------- helpers ----------
 
-    private fun notifyReceived(name: String) {
-        try {
-            val nm = ctx.getSystemService(NotificationManager::class.java)
-            val pi = PendingIntent.getActivity(
-                ctx, 0, Intent(ctx, MainActivity::class.java),
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-            val notif = android.app.Notification.Builder(ctx, App.CHANNEL)
-                .setSmallIcon(R.drawable.ic_stat_share)
-                .setContentTitle(ctx.getString(R.string.notif_received, name))
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .build()
-            nm.notify(App.NOTIF_TRANSFER, notif)
-        } catch (_: Exception) {
-        }
-    }
+    private fun notifyReceived(name: String) = Notifier.received(ctx, name)
 
     private fun mimeOf(name: String): String {
         val ext = name.substringAfterLast('.', "").lowercase()

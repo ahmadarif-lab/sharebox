@@ -12,6 +12,9 @@ object HotspotManager {
 
     private var reservation: WifiManager.LocalOnlyHotspotReservation? = null
 
+    /** True kalau hotspot dinyalakan otomatis oleh mode Receive (jadi ikut mati saat Receive berhenti). */
+    @Volatile var autoStarted = false
+
     val running: Boolean
         get() = reservation != null
 
@@ -24,7 +27,10 @@ object HotspotManager {
             @Suppress("DEPRECATION")
             val cfg = res.wifiConfiguration
             @Suppress("DEPRECATION")
-            Info(cfg?.SSID ?: "ShareBox", cfg?.preSharedKey ?: "")
+            Info(
+                cfg?.SSID?.trim('"') ?: "ShareBox",
+                cfg?.preSharedKey?.trim('"') ?: "",
+            )
         }
     }
 
@@ -58,6 +64,7 @@ object HotspotManager {
     }
 
     fun stop() {
+        autoStarted = false
         try {
             reservation?.close()
         } catch (_: Exception) {

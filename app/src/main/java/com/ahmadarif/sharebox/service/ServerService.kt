@@ -15,6 +15,7 @@ import com.ahmadarif.sharebox.MainActivity
 import com.ahmadarif.sharebox.R
 import com.ahmadarif.sharebox.core.ServerController
 import com.ahmadarif.sharebox.hotspot.HotspotManager
+import com.ahmadarif.sharebox.net.DirectServer
 import com.ahmadarif.sharebox.net.PeerDiscovery
 
 class ServerService : Service() {
@@ -37,21 +38,39 @@ class ServerService : Service() {
         acquireWifiLock()
     }
 
+    /**
+     * Dua mode independen di service yang sama: web server HTTP (PC/browser) dan penerima
+     * Direct (HP ke HP). Masing-masing dinyalakan/dimatikan sendiri; service berhenti kalau
+     * keduanya mati.
+     */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val mode = intent?.getStringExtra(EXTRA_MODE)
         if (intent?.action == ACTION_STOP) {
-            stopSelf()
-            return START_NOT_STICKY
+            if (mode != MODE_DIRECT) ServerController.stop()
+            if (mode != MODE_WEB) stopDirect()
+            if (!ServerController.status().running && !DirectServer.running) {
+                stopSelf()
+                return START_NOT_STICKY
+            }
+        } else {
+            if (mode == MODE_DIRECT) DirectServer.start(this) else ServerController.start()
         }
-        ServerController.start()
         startForeground(App.NOTIF_SERVER, buildNotification())
         handler.removeCallbacks(ticker)
         handler.postDelayed(ticker, 15_000L)
         return START_STICKY
     }
 
+    private fun stopDirect() {
+        DirectServer.stop()
+        // Hotspot yang dinyalakan otomatis oleh Receive ikut mati; hotspot manual dibiarkan.
+        if (HotspotManager.autoStarted) HotspotManager.stop()
+    }
+
     override fun onDestroy() {
         handler.removeCallbacks(ticker)
         ServerController.stop()
+        DirectServer.stop()
         HotspotManager.stop()
         PeerDiscovery.release()
         releaseWifiLock()
@@ -94,11 +113,16 @@ class ServerService : Service() {
             this, 1, Intent(this, ServerService::class.java).setAction(ACTION_STOP),
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-        val url = ServerController.urls().firstOrNull()?.url ?: "http://…:${ServerController.status().port}/"
+        val web = ServerController.status().running
+        val text = when {
+            web && DirectServer.running -> getString(R.string.notif_both)
+            DirectServer.running -> getString(R.string.notif_receiving)
+            else -> ServerController.urls().firstOrNull()?.url ?: "http://…:${ServerController.status().port}/"
+        }
         return Notification.Builder(this, App.CHANNEL)
             .setSmallIcon(R.drawable.ic_stat_share)
             .setContentTitle(getString(R.string.notif_title))
-            .setContentText(url)
+            .setContentText(text)
             .setContentIntent(openIntent)
             .setOngoing(true)
             .addAction(
@@ -114,5 +138,8 @@ class ServerService : Service() {
     companion object {
         const val ACTION_START = "com.ahmadarif.sharebox.START"
         const val ACTION_STOP = "com.ahmadarif.sharebox.STOP"
+        const val EXTRA_MODE = "mode"
+        const val MODE_WEB = "web"
+        const val MODE_DIRECT = "direct"
     }
 }

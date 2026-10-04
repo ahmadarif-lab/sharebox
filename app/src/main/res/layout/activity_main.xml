@@ -18,20 +18,25 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_nav"
         android:orientation="horizontal"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp">
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp">
 
         <LinearLayout
             android:id="@+id/nav_home"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@null"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="6dp">
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
             <ImageView
                 android:id="@+id/nav_home_icon"
@@ -47,7 +52,8 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/tab_server"
                 android:textColor="@color/muted"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -55,12 +61,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@null"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="6dp">
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
             <ImageView
                 android:id="@+id/nav_files_icon"
@@ -76,7 +85,8 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/files"
                 android:textColor="@color/muted"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,12 +94,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@null"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="6dp">
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
             <ImageView
                 android:id="@+id/nav_transfers_icon"
@@ -105,7 +118,8 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/transfers"
                 android:textColor="@color/muted"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -113,12 +127,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="@null"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="6dp">
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="2dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
             <ImageView
                 android:id="@+id/nav_settings_icon"
@@ -134,7 +151,8 @@
                 android:layout_marginTop="2dp"
                 android:text="@string/settings"
                 android:textColor="@color/muted"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Palet disamakan dengan token web UI (kontras WCAG AA terukur).
-         light: accent 5.67:1 dengan putih & sebagai teks di atas putih. -->
-    <color name="bg">#EEF2FB</color>
+    <!-- Palet tenang: permukaan datar, satu biru brand (Send), satu hijau (Receive). -->
+    <color name="bg">#F4F6FA</color>
     <color name="card">#FFFFFF</color>
-    <color name="fg">#16203A</color>
-    <color name="muted">#5D6A82</color>
-    <color name="border">#E7ECF7</color>
-    <color name="accent">#3358E8</color>
+    <color name="fg">#12182B</color>
+    <color name="muted">#5B6478</color>
+    <color name="border">#E1E5EE</color>
+    <color name="accent">#2B5BE8</color>
     <color name="accent_2">#6B4FE0</color>
-    <color name="accent_soft">#E7ECFF</color>
+    <color name="accent_soft">#E7EDFF</color>
     <color name="on_accent">#FFFFFF</color>
+    <color name="recv">#13804F</color>
+    <color name="recv_soft">#E2F4EA</color>
+    <color name="on_recv">#FFFFFF</color>
     <color name="danger">#D93A40</color>
     <color name="danger_soft">#FDECEC</color>
-    <color name="ok">#0F8A3D</color>
-    <color name="chip">#F6F8FE</color>
+    <color name="ok">#13804F</color>
+    <color name="chip">#EEF1F6</color>
     <color name="nav_bg">#FFFFFF</color>
-    <color name="hero_fg">#FFFFFF</color>
-    <color name="hero_fg_dim">#E6EDFF</color>
     <color name="ic_launcher_background">#3358E8</color>
     <color name="ic_launcher_solid">#F6F8FC</color>
 </resources>

@@ -20,6 +20,7 @@
             android:layout_weight="1"
             android:text="@string/transfers"
             android:textColor="@color/fg"
+            android:fontFamily="sans-serif-medium"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -58,7 +59,9 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:divider="@null"
+            android:paddingStart="12dp"
             android:paddingTop="6dp"
+            android:paddingEnd="12dp"
             android:scrollbars="none" />
 
         <TextView

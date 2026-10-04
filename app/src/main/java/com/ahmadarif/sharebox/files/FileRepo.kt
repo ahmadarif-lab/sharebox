@@ -15,6 +15,10 @@ object FileRepo {
         val mtime: Long,
         val iconRes: Int,
         val key: String,
+        /** Nama file di sisi penerima. Untuk aplikasi: "Nama_versi.apk", bukan "base.apk". */
+        val sendName: String = name,
+        /** Keterangan tambahan di baris (mis. "Split APK"). */
+        val note: String? = null,
     )
 
     enum class Cat(val labelRes: Int) {
@@ -109,15 +113,24 @@ object FileRepo {
             val src = app.publicSourceDir ?: app.sourceDir ?: continue
             val f = File(src)
             if (!f.isFile) continue
+            val label = pm.getApplicationLabel(app).toString()
+            val version = runCatching { pm.getPackageInfo(app.packageName, 0).versionName }.getOrNull()
+            // Semua APK bernama "base.apk"; kirim dengan nama aplikasinya supaya bisa dikenali.
+            val safe = (label + (version?.takeIf { it.isNotBlank() }?.let { "_$it" } ?: ""))
+                .replace(Regex("[\\\\/:*?\"<>|]"), "_")
+            // App bundle: base.apk saja belum tentu bisa dipasang berdiri sendiri.
+            val split = app.splitSourceDirs?.isNotEmpty() == true
             out.add(
                 Entry(
-                    name = pm.getApplicationLabel(app).toString(),
+                    name = label,
                     file = f,
                     dir = false,
                     size = f.length(),
                     mtime = f.lastModified(),
                     iconRes = R.drawable.ic_apk,
                     key = "app:" + app.packageName,
+                    sendName = "$safe.apk",
+                    note = if (split) "Split APK" else version,
                 )
             )
         }

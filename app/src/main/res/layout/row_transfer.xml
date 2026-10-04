@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingStart="16dp"
+    android:paddingStart="4dp"
     android:paddingTop="10dp"
-    android:paddingEnd="16dp"
+    android:paddingEnd="4dp"
     android:paddingBottom="10dp">
 
     <LinearLayout
@@ -16,30 +16,55 @@
 
         <ImageView
             android:id="@+id/img_dir"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/bg_icon_send"
             android:contentDescription="@string/transfers"
+            android:padding="8dp"
             android:src="@drawable/ic_upload"
-            android:tint="@color/accent" />
+            android:tint="@color/on_accent" />
 
-        <TextView
-            android:id="@+id/tv_name"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
-            android:ellipsize="middle"
-            android:maxLines="1"
-            android:textColor="@color/fg"
-            android:textSize="14sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="middle"
+                android:maxLines="1"
+                android:textColor="@color/fg"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_meta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/muted"
+                android:textSize="12sp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_meta"
+            android:id="@+id/tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textColor="@color/muted"
-            android:textSize="12sp" />
+            android:background="@drawable/bg_badge_send"
+            android:paddingStart="8dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="2dp"
+            android:text="@string/tag_sent"
+            android:textColor="@color/on_accent"
+            android:textSize="10sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <ProgressBar

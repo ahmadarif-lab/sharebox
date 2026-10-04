@@ -17,6 +17,8 @@ object TransferTracker {
         val dir: TransferDir,
         val total: Long,
         val folder: String? = null,
+        /** Lokasi file di disk (untuk thumbnail & viewer); null kalau tidak diketahui. */
+        val path: String? = null,
         @Volatile var done: Long = 0,
         @Volatile var state: TransferState = TransferState.RUNNING,
         @Volatile var error: String? = null,
@@ -73,8 +75,8 @@ object TransferTracker {
         main.post { snapshot.forEach { runCatching { it() } } }
     }
 
-    fun start(name: String, dir: TransferDir, total: Long, folder: String? = null): Long {
-        val item = Item(seq.incrementAndGet(), name, dir, total, folder)
+    fun start(name: String, dir: TransferDir, total: Long, folder: String? = null, path: String? = null): Long {
+        val item = Item(seq.incrementAndGet(), name, dir, total, folder, path)
         list.add(0, item)
         while (list.size > 40) list.removeAt(list.size - 1)
         notifyChanged()

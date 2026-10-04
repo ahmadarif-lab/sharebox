@@ -1,6 +1,11 @@
 package com.ahmadarif.sharebox.ui
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.view.View
+import android.widget.Switch
 import android.widget.EditText
 import android.widget.TextView
 import com.ahmadarif.sharebox.BuildConfig
@@ -15,17 +20,20 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
     override fun layoutId(): Int = R.layout.tab_settings
 
     private val etName: EditText = root.findViewById(R.id.et_name)
-    private val etPort: EditText = root.findViewById(R.id.et_port)
-    private val tvStoragePath: TextView = root.findViewById(R.id.tv_storage_path)
     private val tvStorageDesc: TextView = root.findViewById(R.id.tv_storage_desc)
-    private val btnGrant: View = root.findViewById(R.id.btn_grant)
-    private val btnGrantText: TextView = root.findViewById(R.id.btn_grant_text)
+    private val swStorage: Switch = root.findViewById(R.id.sw_storage)
+    private val themeChips: Map<String, TextView> = mapOf(
+        "system" to root.findViewById(R.id.theme_system),
+        "light" to root.findViewById(R.id.theme_light),
+        "dark" to root.findViewById(R.id.theme_dark),
+    )
     private val tvAbout: TextView = root.findViewById(R.id.tv_about)
     private var lastRoot: String = ""
 
     init {
         root.findViewById<View>(R.id.btn_save).setOnClickListener { save() }
-        btnGrant.setOnClickListener { grantAllFiles() }
+        root.findViewById<View>(R.id.row_storage).setOnClickListener { toggleStorage() }
+        themeChips.forEach { (mode, chip) -> chip.setOnClickListener { setTheme(mode) } }
         tvAbout.text = act.getString(R.string.set_about_text, BuildConfig.VERSION_NAME)
     }
 
@@ -37,16 +45,13 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
 
     private fun refresh() {
         etName.setText(Prefs.displayName())
-        etPort.setText(Prefs.port.toString())
-        etPort.isEnabled = !ServerController.status().running
 
         val granted = Storage.hasAllFiles(act)
-        tvStoragePath.text = runCatching { Storage.root(act).absolutePath }.getOrDefault("")
+        swStorage.isChecked = granted
         tvStorageDesc.setText(
             if (granted) R.string.set_storage_all_desc else R.string.set_storage_need
         )
-        btnGrant.visibility = if (granted) View.GONE else View.VISIBLE
-        btnGrantText.setText(R.string.set_grant)
+        paintTheme()
 
         // Kalau izin baru diberikan (atau dicabut), samakan folder kerja Files tab + server.
         val rootNow = runCatching { Storage.root(act).absolutePath }.getOrDefault("")
@@ -60,20 +65,36 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
     private fun save() {
         val name = etName.text.toString().trim()
         if (name.isNotEmpty()) Prefs.deviceName = name
-
-        val port = etPort.text.toString().toIntOrNull()
-        when {
-            port == null || port !in 1024..65535 ->
-                Ui.toast(act, act.getString(R.string.err_port))
-            ServerController.status().running && port != Prefs.port ->
-                Ui.toast(act, "Stop the server first to change the port")
-            else ->
-                ServerController.setPort(port)
-        }
         Ui.toast(act, act.getString(R.string.set_saved))
     }
 
-    private fun grantAllFiles() {
-        Ui.grantAllFiles(act)
+    /**
+     * Izin "semua file" tidak bisa diubah dari dalam app: Android mewajibkan user melakukannya
+     * di halaman pengaturan sistem. Toggle ini menampilkan statusnya dan membuka halaman itu;
+     * status diperbarui lagi saat user kembali (onShow).
+     */
+    private fun toggleStorage() {
+        if (Storage.hasAllFiles(act) && Build.VERSION.SDK_INT < 30) {
+            // Android 10-: mencabut izin runtime hanya lewat halaman detail app.
+            act.startActivity(
+                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + act.packageName))
+            )
+        } else {
+            Ui.grantAllFiles(act)
+        }
+    }
+
+    private fun setTheme(mode: String) {
+        if (Prefs.theme == mode) return
+        Prefs.theme = mode
+        act.recreate()
+    }
+
+    private fun paintTheme() {
+        themeChips.forEach { (mode, chip) ->
+            val on = Prefs.theme == mode
+            chip.setBackgroundResource(if (on) R.drawable.bg_chip_on else R.drawable.bg_chip)
+            chip.setTextColor(act.getColor(if (on) R.color.on_accent else R.color.fg))
+        }
     }
 }

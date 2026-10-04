@@ -13,8 +13,8 @@ android {
         applicationId = "com.ahmadarif.sharebox"
         minSdk = 26
         targetSdk = 36
-        versionCode = 45
-        versionName = "1.4.6"
+        versionCode = 48
+        versionName = "1.4.9"
     }
 
     signingConfigs {
@@ -54,6 +54,8 @@ android {
             "META-INF/NOTICE*",
             "kotlin-tooling-metadata.json",
             "DebugProbesKt.bin",
+            // Metadata builtins Kotlin: hanya dipakai kotlin-reflect, yang tidak ada di app ini.
+            "kotlin/**",
         )
     }
 }
