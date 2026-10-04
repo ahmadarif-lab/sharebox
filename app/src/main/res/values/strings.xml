@@ -76,6 +76,17 @@
     <string name="set_about">About</string>
     <string name="set_about_text">ShareBox %1$s\nWi-Fi file transfer, no internet needed. HTTP server + web file manager for PC, plus one-tap phone-to-phone sending.\n\nBuilt on the plain Android framework — tiny APK, no ads, no trackers.</string>
 
+    <string name="pair_channel">Connection requests</string>
+    <string name="pair_channel_desc">When another device asks to connect and send files</string>
+    <string name="pair_request_title">%1$s wants to connect</string>
+    <string name="pair_request_text">Approve to let this device send files to your Inbox.</string>
+    <string name="pair_approve">Approve</string>
+    <string name="pair_decline">Decline</string>
+    <string name="pair_waiting">Waiting for %1$s to approve…</string>
+    <string name="pair_declined">%1$s declined the connection</string>
+    <string name="pair_no_response">No response from %1$s</string>
+    <string name="pair_declined_device">Rejected: this device was declined</string>
+
     <!-- Notification -->
     <string name="notif_channel">Server status</string>
     <string name="notif_channel_desc">Shows the server address while running</string>

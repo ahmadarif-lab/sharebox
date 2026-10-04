@@ -19,6 +19,7 @@ import com.ahmadarif.sharebox.core.Storage
 import com.ahmadarif.sharebox.core.TransferDir
 import com.ahmadarif.sharebox.core.TransferTracker
 import com.ahmadarif.sharebox.net.NetInfo
+import com.ahmadarif.sharebox.net.Pairing
 import com.ahmadarif.sharebox.net.PeerDiscovery
 import com.ahmadarif.sharebox.net.Qr
 import org.json.JSONArray
@@ -71,6 +72,7 @@ class ApiHandler(private val ctx: Context) {
                     "/api/pause" -> pause(req, res)
                     "/api/resume" -> resume(req, res)
                     "/api/cancel" -> cancel(req, res)
+                    "/api/pair/request" -> pairRequest(req, res)
                     else -> notFound(res)
                 }
                 else -> {
@@ -586,7 +588,31 @@ class ApiHandler(private val ctx: Context) {
         res.sendJson(JSONObject().put("peers", arr))
     }
 
+    /**
+     * Permintaan pairing dari HP lain. Permintaan ini MENUNGGU pemilik HP ini menekan
+     * Approve/Decline (maks 30 detik) lalu membalas token kalau disetujui.
+     */
+    private fun pairRequest(req: HttpRequest, res: HttpResult) {
+        val body = JSONObject(req.bodyString())
+        val peerId = body.optString("id")
+        if (peerId.isEmpty()) throw IllegalArgumentException("id required")
+        val peerName = body.optString("name", "Android").take(40)
+        val (token, error) = Pairing.requestApproval(ctx, peerId, peerName, req.remote)
+        if (token == null) {
+            res.sendJson(JSONObject().put("ok", false).put("error", error ?: "declined"))
+        } else {
+            res.sendJson(
+                JSONObject()
+                    .put("ok", true)
+                    .put("token", token)
+                    .put("name", Prefs.displayName())
+            )
+        }
+    }
+
     private fun upload(req: HttpRequest, res: HttpResult) {
+        // Pairing: device yang ditolak tidak boleh menaruh file selama sesi ini.
+        if (Pairing.isDeclined(req.remote)) throw SecurityException("this device was declined")
         val r = root()
         val dir = Fs.resolve(r, req.q("path") ?: "")
         if (!dir.isDirectory && !dir.mkdirs()) throw SecurityException("Cannot create destination folder")

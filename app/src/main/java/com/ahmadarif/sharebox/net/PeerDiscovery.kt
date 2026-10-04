@@ -52,6 +52,9 @@ object PeerDiscovery {
     fun addListener(l: () -> Unit) = listeners.add(l)
     fun removeListener(l: () -> Unit) = listeners.remove(l)
 
+    /** Identitas device ini di jaringan (dipakai juga saat pairing). */
+    fun myId(): String = myId
+
     private fun notifyChanged() {
         if (listeners.isEmpty()) return
         val snapshot = listeners.toList()

@@ -56,6 +56,10 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
+        <receiver
+            android:name=".net.PairingReceiver"
+            android:exported="false" />
+
         <provider
             android:name=".fileprov.SafeProvider"
             android:authorities="${applicationId}.files"

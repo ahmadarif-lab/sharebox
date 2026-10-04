@@ -3,6 +3,7 @@ package com.ahmadarif.sharebox.core
 import android.content.Context
 import android.util.Log
 import com.ahmadarif.sharebox.net.NetInfo
+import com.ahmadarif.sharebox.net.Pairing
 import com.ahmadarif.sharebox.server.ApiHandler
 import com.ahmadarif.sharebox.server.HttpServer
 
@@ -34,6 +35,8 @@ object ServerController {
     fun start(): Boolean {
         val ctx = app ?: return false
         if (status.running) return true
+        // Sesi server baru = state pairing baru (blokir device ditolak tidak ikut terbawa).
+        Pairing.clear()
         return try {
             val port = Prefs.port
             val handler = ApiHandler(ctx)

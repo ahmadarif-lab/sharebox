@@ -25,10 +25,25 @@ class App : Application() {
                 }
             )
         }
+        // Channel terpisah untuk permintaan pairing: harus HIGH supaya muncul sebagai
+        // heads-up dan tombol Approve/Decline bisa langsung ditekan.
+        if (nm.getNotificationChannel(CHANNEL_PAIR) == null) {
+            nm.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL_PAIR,
+                    getString(R.string.pair_channel),
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    description = getString(R.string.pair_channel_desc)
+                    enableVibration(true)
+                }
+            )
+        }
     }
 
     companion object {
         const val CHANNEL = "sharebox.server"
+        const val CHANNEL_PAIR = "sharebox.pair"
         const val NOTIF_SERVER = 7
         const val NOTIF_TRANSFER = 8
     }

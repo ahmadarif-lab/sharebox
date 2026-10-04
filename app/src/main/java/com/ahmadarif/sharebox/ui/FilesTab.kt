@@ -14,6 +14,7 @@ import com.ahmadarif.sharebox.R
 import com.ahmadarif.sharebox.core.Fs
 import com.ahmadarif.sharebox.core.Storage
 import com.ahmadarif.sharebox.files.FileRepo
+import com.ahmadarif.sharebox.net.Pairing
 import com.ahmadarif.sharebox.net.PeerDiscovery
 import com.ahmadarif.sharebox.net.PeerSender
 import java.io.File
@@ -312,16 +313,28 @@ class FilesTab(activity: MainActivity) : BaseTab(activity) {
     private fun doSend(files: List<File>, peer: PeerDiscovery.Peer) {
         if (files.isEmpty()) return
         clearSelection()
-        Ui.toast(act, act.getString(R.string.sending, files.first().name))
+        if (Pairing.tokenFor(peer.id) == null) {
+            Ui.toast(act, act.getString(R.string.pair_waiting, peer.name))
+        } else {
+            Ui.toast(act, act.getString(R.string.sending, files.first().name))
+        }
         val folder = files.firstOrNull()?.parentFile?.let {
             runCatching { Fs.rel(Storage.root(act), it) }.getOrNull()
         }
-        PeerSender.send(files, peer, folder) { ok, failed ->
-            Ui.toast(
-                act,
-                if (failed == 0) act.getString(R.string.sent_ok, ok)
-                else act.getString(R.string.sent_partial, ok, failed)
-            )
+        PeerSender.send(files, peer, folder) { ok, failed, error ->
+            if (error != null) {
+                Ui.toast(
+                    act,
+                    if (error == "declined") act.getString(R.string.pair_declined, peer.name)
+                    else act.getString(R.string.pair_no_response, peer.name)
+                )
+            } else {
+                Ui.toast(
+                    act,
+                    if (failed == 0) act.getString(R.string.sent_ok, ok)
+                    else act.getString(R.string.sent_partial, ok, failed)
+                )
+            }
             act.select(2)
         }
     }
