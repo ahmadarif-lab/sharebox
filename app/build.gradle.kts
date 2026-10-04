@@ -13,8 +13,8 @@ android {
         applicationId = "com.ahmadarif.sharebox"
         minSdk = 26
         targetSdk = 36
-        versionCode = 38
-        versionName = "1.3.4"
+        versionCode = 45
+        versionName = "1.4.6"
     }
 
     signingConfigs {
