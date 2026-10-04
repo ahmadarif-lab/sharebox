@@ -22,4 +22,22 @@ object Qr {
         }
         return Bitmap.createBitmap(pixels, size, size, Bitmap.Config.ARGB_8888)
     }
+
+    /**
+     * QR kredensial hotspot (skema standar `WIFI:`) — dipindai kamera HP/iPhone, device
+     * langsung ditawari menyambung tanpa mengetik SSID & sandi.
+     */
+    fun wifiQr(ssid: String, pass: String): String {
+        fun esc(s: String): String = s
+            .replace("\\", "\\\\")
+            .replace(";", "\\;")
+            .replace(",", "\\,")
+            .replace(":", "\\:")
+            .replace("\"", "\\\"")
+        val type = if (pass.isBlank()) "nopass" else "WPA"
+        return "WIFI:T:$type;S:${esc(ssid)};P:${esc(pass)};H:false;;"
+    }
+
+    fun wifiBitmap(ssid: String, pass: String, size: Int = 512): Bitmap =
+        bitmap(wifiQr(ssid, pass), size)
 }

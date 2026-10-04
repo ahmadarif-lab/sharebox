@@ -18,6 +18,9 @@
     <string name="hotspot_desc">No shared Wi-Fi? Turn on the hotspot so other devices can connect and open the address above.</string>
     <string name="hotspot_start">Turn on hotspot</string>
     <string name="hotspot_stop">Turn off hotspot</string>
+    <string name="hotspot_qr_hint">Scan the QR to join the hotspot, then open the address above.</string>
+    <string name="hotspot_show_pass">Show password</string>
+    <string name="hotspot_hide_pass">Hide password</string>
     <string name="quick_inbox">Open Inbox folder</string>
     <string name="quick_howto">How to use</string>
     <string name="howto_title">How to use</string>

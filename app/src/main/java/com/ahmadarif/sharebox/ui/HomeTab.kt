@@ -31,7 +31,9 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
     private val tvDevname: TextView = root.findViewById(R.id.tv_devname)
     private val tvUrl: TextView = root.findViewById(R.id.tv_url)
     private val tvHint: TextView = root.findViewById(R.id.tv_hint)
-    private val imgQr: ImageView = root.findViewById(R.id.img_qr)
+    private val imgWifiQr: ImageView = root.findViewById(R.id.img_wifi_qr)
+    private val tvWifiQrHint: TextView = root.findViewById(R.id.tv_wifi_qr_hint)
+    private val btnShowPass: TextView = root.findViewById(R.id.btn_show_pass)
     private val btnServer: View = root.findViewById(R.id.btn_server)
     private val btnServerIcon: ImageView = root.findViewById(R.id.btn_server_icon)
     private val btnServerText: TextView = root.findViewById(R.id.btn_server_text)
@@ -47,7 +49,8 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
 
     private val handler = Handler(Looper.getMainLooper())
     private var visible = false
-    private var lastQrUrl: String? = null
+    private var lastWifiQrKey: String? = null
+    private var passShown = false
     private var lastPeersKey: String = ""
 
     private val ticker = object : Runnable {
@@ -64,6 +67,10 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
             if (url != null) Ui.copy(act, url) else Ui.toast(act, act.getString(R.string.no_url))
         }
         btnHotspot.setOnClickListener { toggleHotspot() }
+        btnShowPass.setOnClickListener {
+            passShown = !passShown
+            refresh()
+        }
         btnRefreshPeers.setOnClickListener {
             refresh()
             Ui.toast(act, act.getString(R.string.refresh))
@@ -174,42 +181,63 @@ class HomeTab(activity: MainActivity) : BaseTab(activity) {
         btnServerIcon.setImageResource(if (st.running) R.drawable.ic_close else R.drawable.ic_send)
         tvDevname.text = Prefs.displayName()
 
-        val primary = if (st.running) ServerController.urls().firstOrNull()?.url else null
+        val urls = if (st.running) ServerController.urls() else emptyList()
+        // Kalau hotspot sedang jalan, utamakan alamat interface AP-nya: device yang baru
+        // menyambung ke hotspot tidak bisa memakai IP Wi-Fi rumah.
+        val primary = if (HotspotManager.running) {
+            urls.firstOrNull { it.label.startsWith("ap") || it.label.startsWith("swlan") || it.label.startsWith("wlan1") }?.url
+                ?: urls.firstOrNull()?.url
+        } else {
+            urls.firstOrNull()?.url
+        }
         tvUrl.text = primary ?: "—"
         tvHint.setText(if (primary != null) R.string.scan_qr else R.string.no_url)
 
         if (primary != null) {
-            imgQr.visibility = View.VISIBLE
-            if (primary != lastQrUrl) {
-                lastQrUrl = primary
-                generateQr(primary)
-            }
+            tvHint.setText(R.string.scan_qr)
         } else {
-            imgQr.visibility = View.GONE
-            lastQrUrl = null
+            tvHint.setText(R.string.no_url)
         }
 
         val hot = HotspotManager.currentInfo()
         if (HotspotManager.running && hot != null) {
-            tvHotspot.text = "SSID: ${hot.ssid}   •   Sandi: ${hot.pass.ifBlank { "-" }}"
+            // Nama & sandi tidak ditulis di layar — QR sudah cukup untuk menyambung.
+            // Toggle kecil disediakan buat device tanpa kamera (PC) yang perlu manual.
+            tvHotspot.text = "SSID: ${hot.ssid}   •   Password: ${hot.pass.ifBlank { "-" }}"
+            tvHotspot.visibility = if (passShown) View.VISIBLE else View.GONE
             btnHotspotText.setText(R.string.hotspot_stop)
+            imgWifiQr.visibility = View.VISIBLE
+            tvWifiQrHint.visibility = View.VISIBLE
+            btnShowPass.visibility = View.VISIBLE
+            btnShowPass.setText(if (passShown) R.string.hotspot_hide_pass else R.string.hotspot_show_pass)
+            val key = hot.ssid + "\u0000" + hot.pass
+            if (key != lastWifiQrKey) {
+                lastWifiQrKey = key
+                generateWifiQr(hot.ssid, hot.pass)
+            }
         } else {
             tvHotspot.setText(R.string.hotspot_desc)
+            tvHotspot.visibility = View.VISIBLE
             btnHotspotText.setText(R.string.hotspot_start)
+            imgWifiQr.visibility = View.GONE
+            tvWifiQrHint.visibility = View.GONE
+            btnShowPass.visibility = View.GONE
+            lastWifiQrKey = null
+            passShown = false
         }
 
         renderPeers()
     }
 
-    private fun generateQr(url: String) {
+    private fun generateWifiQr(ssid: String, pass: String) {
         Thread({
-            val bmp = runCatching { Qr.bitmap(url, 512) }.getOrNull()
+            val bmp = runCatching { Qr.wifiBitmap(ssid, pass, 512) }.getOrNull()
             if (bmp != null) {
                 handler.post {
-                    if (lastQrUrl == url) imgQr.setImageBitmap(bmp)
+                    if (lastWifiQrKey != null) imgWifiQr.setImageBitmap(bmp)
                 }
             }
-        }, "sharebox-qr").apply { isDaemon = true }.start()
+        }, "sharebox-wifiqr").apply { isDaemon = true }.start()
     }
 
     private fun renderPeers() {
