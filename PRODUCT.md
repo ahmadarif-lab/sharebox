@@ -17,7 +17,7 @@ Turn an Android phone into a local file hub: an embedded HTTP server with a brow
 
 ## Positioning
 
-No cloud, no account, no tracking, no ads, and a deliberately tiny binary (~190 KB). The mechanism is the position: the phone *is* the server, every other device is a browser or a second install, and the transport is the local network only. A cloud transfer product cannot truthfully claim offline operation; a bloated local-transfer app cannot truthfully claim an ad-free tiny APK.
+No cloud, no account, no tracking, no ads, and a deliberately tiny binary (~220 KB). The mechanism is the position: the phone *is* the server, every other device is a browser or a second install, and the transport is the local network only. A cloud transfer product cannot truthfully claim offline operation; a bloated local-transfer app cannot truthfully claim an ad-free tiny APK.
 
 ## Operating Context
 
@@ -47,7 +47,7 @@ No cloud, no account, no tracking, no ads, and a deliberately tiny binary (~190 
 ## Brand Commitments
 
 - **Name:** ShareBox.
-- **Icon:** the owner's own artwork, kept in `assets/icon-sharebox-v1.jpg`, `icon-sharebox-v2.png`, `icon-sharebox-v3.png`; v3 (transparent) is the one in use as launcher icon, favicon, and sidebar mark.
+- **Icon:** the owner's own artwork. The 512 px master is `docs/icon-master.webp` (transparent); it is the one in use as launcher icon, favicon, and sidebar mark.
 - **Voice:** English for all UI and documentation copy; Indonesian is used only in conversation.
 - **Palette anchor:** the icon's blue→violet identity is carried into the app and the web UI.
 - **Binding stance, not a current state:** no ads, no trackers, no analytics, no third-party SDKs beyond zxing.
@@ -63,7 +63,7 @@ No cloud, no account, no tracking, no ads, and a deliberately tiny binary (~190 
 
 1. **Local by default.** Nothing leaves the LAN; the phone serves rather than being a client of someone else's service.
 2. **One tap plus a URL.** If a flow needs an account, a cable, or an install on the other side, it is the wrong flow.
-3. **The binary stays tiny.** Every dependency and asset is weighed against a ~190 KB budget.
+3. **The binary stays tiny.** Every dependency and asset is weighed against a ~220 KB budget.
 4. **Long transfers are the normal case.** Resilient, resumable, pausable, and observable in real numbers (speed, ETA).
 5. **Honest affordances.** Never show a control that cannot work without saying why (e.g. "open folder" on the web).
 
