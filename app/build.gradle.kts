@@ -14,8 +14,8 @@ android {
         applicationId = "id.ahmadarif.sharebox"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "1.0.0"
     }
 
     // Kunci rilis TIDAK ada di repo: dibaca dari key.properties (di-ignore git) yang menunjuk ke

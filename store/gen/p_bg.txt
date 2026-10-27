@@ -1,0 +1,6 @@
+Use your image generation tool to create ONE image and save it as promo_bg.png in the current directory. Portrait 9:16 (1024x1792 or larger).
+It is the background for Google Play store screenshots of "ShareBox", a Wi-Fi file sharing app. Match the style and palette of the attached app icon (glossy 3D folder with Wi-Fi waves, royal blue #3358E8 to violet #6B4FE0, with a touch of teal).
+Content: a smooth diagonal gradient (deep royal blue top-left, violet middle, soft teal glow bottom-right), large very soft concentric Wi-Fi arcs / radio ripples, a few small blurred translucent glass file cards and folder shapes floating near the edges, gentle bokeh light. Calm, premium, modern, clean.
+The top 30% and the center must stay calm and fairly plain (text and a phone screenshot will be placed there later).
+STRICT: no text, no letters, no numbers, no logos, no phones, no UI, no people, no watermark.
+After saving, reply only with the file name.

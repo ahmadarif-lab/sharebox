@@ -52,8 +52,6 @@ and the whole app is about 220 KB, built on the plain Android framework with a s
 - Live transfer list with direction (sent or received), speed and progress.
 - Foreground service with a Wi-Fi lock, so long transfers survive a locked screen.
 - Light, dark or follow-the-system theme.
-- Update check: once a day the app reads `latest.json` from apps.bontot.my.id and offers a newer
-  release. The request carries nothing about you or your version, and it can be turned off in Settings.
 
 ## Screenshots
 
@@ -71,7 +69,7 @@ and the whole app is about 220 KB, built on the plain Android framework with a s
 
 Download the APK from the [latest release](https://github.com/ahmadarif-lab/sharebox/releases/latest)
 and open it (Android will ask you to allow installing from that source once). It also has a page at
-<https://apps.bontot.my.id/sharebox/>.
+<https://apps.ahmadarif.id/sharebox/>.
 
 The release is signed with the author's own key; compare the SHA-256 listed in the release notes
 with `shasum -a 256 <file>` if you want to be sure.
@@ -103,7 +101,6 @@ keyPassword=...
 | Web server | HTTP on port `2999`, fixed. Streams files with Range support. The browser must enter the password shown in the app; it is random per install and can be renewed from the Home tab, which signs out every open browser. Plain HTTP, so use it on networks you trust. |
 | Phone to phone | Its own TCP protocol (SBX1) on port `47778`, open only while **Receive** is on. |
 | Discovery | UDP broadcast on port `47777`, used by "Devices on this network". It finds devices on the same network, not physically near ones. |
-| Updates | `GET https://apps.bontot.my.id/sharebox/latest.json`, at most once a day; only links to `apps.bontot.my.id` and `github.com` are accepted. |
 | Storage | App folder only, or all files with the "All files access" permission. Received files go to `Inbox`. |
 
 ### Direct protocol (SBX1)

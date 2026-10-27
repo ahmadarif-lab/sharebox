@@ -30,8 +30,15 @@
         android:maxSdkVersion="29" />
     <!-- Membuka file .apk di pemasang paket sistem. -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
-        tools:ignore="QueryAllPackagesPermission" />
+
+    <!-- Daftar "Apps" di tab Send hanya memuat app yang punya ikon launcher, jadi cukup
+         melihat app ber-launcher; tidak perlu QUERY_ALL_PACKAGES (dibatasi Google Play). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
 
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />

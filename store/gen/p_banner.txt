@@ -1,0 +1,6 @@
+Use your image generation tool to create ONE image and save it as feature_bg.png in the current directory. Wide landscape about 2:1 (1792x1024 or larger, roughly 2048x1000).
+It is the background art for the Google Play feature graphic of "ShareBox", a Wi-Fi file sharing app. Match the style of the attached app icon exactly (glossy 3D blue folder with documents peeking out and a Wi-Fi symbol, royal blue #3358E8 to violet #6B4FE0, touch of teal).
+Composition: the LEFT 55% is a calm smooth gradient (deep royal blue to violet) with only faint soft Wi-Fi ripples — leave it empty for a title that will be added later. On the RIGHT 45%: a large glossy 3D open folder in the icon's style, with a few colorful file cards (a photo thumbnail, a video card with a play triangle, a music note card, a document) flying out of it along a soft glowing arc, surrounded by concentric glowing Wi-Fi waves. Soft depth of field, premium, friendly, clean.
+Keep important content away from the outer 8% edges.
+STRICT: no text, no letters, no numbers, no logos, no brand names, no phones, no people, no watermark.
+After saving, reply only with the file name.
