@@ -199,6 +199,23 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/muted"
             android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/btn_privacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_btn_ghost"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="sans-serif-medium"
+            android:paddingStart="16dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="9dp"
+            android:text="@string/set_privacy"
+            android:textColor="@color/fg"
+            android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

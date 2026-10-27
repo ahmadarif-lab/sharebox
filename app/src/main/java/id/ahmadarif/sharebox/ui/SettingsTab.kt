@@ -35,6 +35,13 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
         root.findViewById<View>(R.id.row_storage).setOnClickListener { toggleStorage() }
         themeChips.forEach { (mode, chip) -> chip.setOnClickListener { setTheme(mode) } }
         tvAbout.text = act.getString(R.string.set_about_text, BuildConfig.VERSION_NAME)
+        root.findViewById<View>(R.id.btn_privacy).setOnClickListener {
+            try {
+                act.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_URL)))
+            } catch (_: Exception) {
+                Ui.toast(act, PRIVACY_URL)
+            }
+        }
     }
 
     override fun onShow() = refresh()
@@ -96,5 +103,9 @@ class SettingsTab(activity: MainActivity) : BaseTab(activity) {
             chip.setBackgroundResource(if (on) R.drawable.bg_chip_on else R.drawable.bg_chip)
             chip.setTextColor(act.getColor(if (on) R.color.on_accent else R.color.fg))
         }
+    }
+
+    companion object {
+        const val PRIVACY_URL = "https://apps.ahmadarif.id/sharebox/privacy/"
     }
 }
