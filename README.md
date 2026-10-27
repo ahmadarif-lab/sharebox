@@ -100,7 +100,7 @@ keyPassword=...
 
 | Piece | Details |
 |---|---|
-| Web server | HTTP on port `2999`, fixed. Streams files with Range support. No authentication: use it on networks you trust. |
+| Web server | HTTP on port `2999`, fixed. Streams files with Range support. The browser must enter the password shown in the app; it is random per install and can be renewed from the Home tab, which signs out every open browser. Plain HTTP, so use it on networks you trust. |
 | Phone to phone | Its own TCP protocol (SBX1) on port `47778`, open only while **Receive** is on. |
 | Discovery | UDP broadcast on port `47777`, used by "Devices on this network". It finds devices on the same network, not physically near ones. |
 | Updates | `GET https://apps.bontot.my.id/sharebox/latest.json`, at most once a day; only links to `apps.bontot.my.id` and `github.com` are accepted. |
@@ -140,7 +140,7 @@ a prompt. Anyone else needs an Approve tap on the receiver.
 
 ## Notes
 
-- The HTTP server has no authentication: anyone on the same network can browse and write.
+- The web server is password-protected but serves plain HTTP: the password and files travel unencrypted on the LAN.
 - Android 15+ may stop the `dataSync` foreground service after about 6 hours.
 - Apps built as bundles (split APKs) are sent as their base APK only, which may not install alone.
 

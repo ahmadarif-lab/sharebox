@@ -49,6 +49,8 @@
 
   async function api(url, opts) {
     const r = await fetch(url, opts);
+    // Sesi habis (server dimatikan / sandi diganti): kembali ke halaman login.
+    if (r.status === 401) { location.reload(); throw new Error('login required'); }
     const text = await r.text();
     let j = null;
     try { j = JSON.parse(text); } catch (e) { /* not json */ }
@@ -855,7 +857,10 @@
       }
       pollProgress();
     };
-    xhr.onload = () => finish(xhr.status >= 200 && xhr.status < 300, 'HTTP ' + xhr.status);
+    xhr.onload = () => {
+      if (xhr.status === 401) { location.reload(); return; }
+      finish(xhr.status >= 200 && xhr.status < 300, 'HTTP ' + xhr.status);
+    };
     xhr.onerror = () => finish(false, 'error');
     xhr.onabort = () => finish(false, 'aborted');
     xhr.send(file);
@@ -1173,6 +1178,11 @@
       localStorage.setItem('sb.theme', dark ? 'dark' : 'light');
     });
   }
+
+  $('#btnLogout').addEventListener('click', async () => {
+    try { await fetch('/api/logout', { method: 'POST' }); } catch (e) { /* ignore */ }
+    location.reload();
+  });
 
   // ---------- init ----------
 

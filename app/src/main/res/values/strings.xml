@@ -43,7 +43,7 @@
     <string name="label_recent">Recent</string>
     <string name="web_title_on">Web server is on</string>
     <string name="web_title_off">Web server is off</string>
-    <string name="web_sub_on">Anyone on this network can open the address below.</string>
+    <string name="web_sub_on">Devices on this network can open the address below with the password.</string>
     <string name="web_sub_off">Start it, then open the address on a PC or any browser on the same Wi-Fi.</string>
     <string name="btn_web_start">Start web server</string>
     <string name="btn_web_stop">Stop web server</string>
@@ -56,6 +56,9 @@
     <string name="recv_sub_on">Visible as %1$s. Waiting for a sender…</string>
     <string name="recv_sub_off">Start receiving to show a QR code and turn on the hotspot.</string>
     <string name="label_web">Open on a PC / browser</string>
+    <string name="label_web_pass">Password</string>
+    <string name="web_pass_new">New password</string>
+    <string name="web_pass_changed">New password set. Browsers already open must sign in again.</string>
     <string name="label_incoming">Incoming</string>
     <string name="label_scan_qr">QR code to connect</string>
     <string name="recv_qr_hotspot">Ask the sender to tap Send and scan this code. Their phone joins this hotspot automatically.</string>

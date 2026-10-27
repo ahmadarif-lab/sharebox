@@ -35,14 +35,13 @@ No cloud, no account, no tracking, no ads, and a deliberately tiny binary (~220 
 
 - Kotlin on the plain Android framework — no AndroidX, no Compose; one runtime dependency (zxing core, QR encoding only); minSdk 26, targetSdk 36; release build with R8 and resource shrinking.
 - The web UI cannot open a local folder on the PC or on the visiting phone (browser sandbox). Any "open folder" affordance can only apply to the phone that hosts the server.
-- The HTTP server has no authentication: anyone on the same network can browse and write. Trusted-network assumption.
+- The HTTP server requires the app-generated password (session cookie, 5 tries then a 30 s lockout per IP), but traffic is plain HTTP. Trusted-network assumption.
 - Wi-Fi Direct is not implemented; discovery depends on a shared network or the hotspot.
 
 **Stated but not started — the biggest open risk:**
 
 - Distribution intent is a **public release / Play Store**, which the current storage model conflicts with. The shipped build requests All Files Access (`MANAGE_EXTERNAL_STORAGE`), a permission Google Play restricts to narrow app categories; a public release needs a Storage Access Framework or MediaStore-based model (or app-folder-only mode) first. No Play-specific work has begun.
 - No release signing identity, privacy policy, data-safety declaration, or store listing assets exist yet.
-- No PIN/authentication for the HTTP server.
 
 ## Brand Commitments
 
